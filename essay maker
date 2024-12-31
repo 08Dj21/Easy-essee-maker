@@ -1,0 +1,32 @@
+def classify_text(text):
+    prompt = f"Järjestä seuraava teksti sopivien otsikoiden alle:\n\n{text}\n\nVastaa muodossa: 'Otsikko: sisältö...'."
+    response = Completion.create(
+        model="gpt-4",
+        prompt=prompt,
+        max_tokens=500
+    )
+    return response.choices[0].text.strip()
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def generate_mindmap(data):
+    graph = nx.DiGraph()
+    for heading, content in data.items():
+        graph.add_node(heading)
+        for sub in content:
+            graph.add_node(sub)
+            graph.add_edge(heading, sub)
+    return graph
+
+def display_mindmap(graph):
+    pos = nx.spring_layout(graph)
+    nx.draw(graph, pos, with_labels=True, node_color="lightblue", node_size=2000, font_size=10, font_weight="bold")
+    plt.show()
+def generate_essay(mindmap_data):
+    essay = []
+    for heading, content in mindmap_data.items():
+        essay.append(f"{heading}\n{'-' * len(heading)}")
+        for sub in content:
+            essay.append(f"- {sub}")
+        essay.append("")  # Tyhjä rivi väliin
+    return "\n".join(essay)
